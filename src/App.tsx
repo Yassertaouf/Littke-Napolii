@@ -15,6 +15,7 @@ import {
   Star,
   X,
 } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 import MenuBook from '@/components/MenuBook';
 import OpeningHours from '@/components/OpeningHours';
 import AllergenBadges from '@/components/AllergenBadges';
@@ -228,6 +229,7 @@ function App() {
         <div className="footer-brand"><img className="brand-logo-image" src={logoSrc} alt="Little Napoli" /></div><p>Pizza fatta bene.<br />Vita fatta meglio.</p><div className="footer-right"><a href={phoneHref}><Phone size={19} /> {phoneNumber}</a><a href={instagramHref} target="_blank" rel="noreferrer"><Instagram size={19} /> Instagram</a><span>© 2026 Little Napoli</span></div>
       </footer>
       <MenuBook isOpen={isMenuBookOpen} onClose={() => setMenuBookOpen(false)} pdfHref={menuPdfHref} />
+      <Analytics />
     </div>
   );
 }
