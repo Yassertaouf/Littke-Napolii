@@ -15,6 +15,7 @@ import {
   X,
 } from 'lucide-react';
 import MenuBook from '@/components/MenuBook';
+import StatueArt from '@/components/StatueArt';
 import OpeningHours from '@/components/OpeningHours';
 import { DoodleField, KickerIcon } from '@/components/ItalianDoodles';
 
@@ -111,7 +112,7 @@ function App() {
           <div className="intro-grid">
             <div className="intro-left">
               <h2>Weniger<br />ist <em>mehr.</em></h2>
-              <img className="intro-mascot" src="/images/pizza-honey-statue.png" alt="Pizza, honey?" loading="lazy" />
+              <StatueArt />
             </div>
             <div className="intro-text">
               <p className="large-copy">Bei Little Napoli verbinden wir Handwerk, Liebe und Leidenschaft zur echten italienischen Esskultur.</p>
@@ -130,7 +131,7 @@ function App() {
         </section>
 
         <section className="split-story">
-          <div className="split-image"><video src="/videos/pizza-baking.mp4" autoPlay muted loop playsInline aria-label="Pizza im Holzofen" /><span className="image-label">Nel cuore di Vienna</span></div>
+          <div className="split-image"><video src="/videos/pizza-baking.mp4" poster="/images/pizza-baking-poster.jpg" autoPlay muted loop playsInline preload="metadata" disablePictureInPicture aria-label="Pizza im Holzofen" /><span className="image-label">Nel cuore di Vienna</span></div>
           <div className="split-copy">
             <DoodleField variant="split" />
             <div className="section-kicker">03 <span /> Unsere Handwerkskunst <KickerIcon section="craft" /></div><h2>Feuer<br />als <em>Signatur.</em></h2><p>Mit neapolitanischem Teig macht man keine Kompromisse. Er braucht Geduld, einen glühenden Ofen und Hände, die wissen, wann es genug ist.</p><div className="stats-row"><div><strong>48–96h</strong><span>Gärzeit</span></div><div><strong>450°</strong><span>im Ofen</span></div><div><strong>90s</strong><span>Backzeit</span></div></div>
@@ -138,7 +139,7 @@ function App() {
         </section>
 
         <section className="chef-section" id="chef">
-          <div className="chef-portrait"><img src="/images/chef.jpg" alt="Pizzaiolo Little Napoli" /><span className="image-label">Unser Pizzaiolo</span></div>
+          <div className="chef-portrait"><img src="/images/chef.jpg" alt="Pizzaiolo Little Napoli" width="732" height="1584" loading="lazy" decoding="async" /><span className="image-label">Unser Pizzaiolo</span></div>
           <div className="chef-copy">
             <DoodleField variant="chef" />
             <div className="section-kicker">04 <span /> Der Handwerker hinter dem Teig <KickerIcon section="chef" /></div><h2>Eine Bewegung,<br />die zur <em>Kunst</em> wird.</h2><p className="large-copy">Pizza ist nicht nur ein Gericht. Sie ist eine Bewegung, eine Erinnerung und eine Art, Tradition weiterzugeben.</p><p>Unser Pizzaiolo trägt die neapolitanische Tradition mit zeitgenössischer Energie weiter. Jede Teigkugel wird von Hand geöffnet, präzise belegt und mit Respekt dem Ofen anvertraut.</p><div className="chef-award"><span className="award-stars">III</span><span>Pizzaiolo<br />Artista Contemporaneo<br /><strong>2025</strong></span></div>
