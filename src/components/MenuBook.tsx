@@ -247,6 +247,8 @@ interface Leaf {
 }
 
 const FLIP_MS = 1050;
+const COMPACT_PW = 290;
+const COMPACT_PH = 600;
 const ALL_PAGES: Page[] = spreads.flatMap((s) => [s.left, s.right]);
 
 const CHIPS: { label: string; match: string }[] = [
@@ -378,7 +380,9 @@ function FaceView({ face, side, active }: { face: Face; side: 'front' | 'back'; 
 }
 
 export default function MenuBook({ pdfHref }: { pdfHref: string }) {
-  const [single, setSingle] = useState(false);
+  const [compact, setCompact] = useState(false);
+  const [scale, setScale] = useState(1);
+  const stageRef = useRef<HTMLDivElement | null>(null);
   const [flipped, setFlipped] = useState(0);
   const [turning, setTurning] = useState<Record<number, boolean>>({});
   const bookRef = useRef<HTMLDivElement | null>(null);
@@ -387,12 +391,12 @@ export default function MenuBook({ pdfHref }: { pdfHref: string }) {
   const flippedRef = useRef(0);
   const touchX = useRef<number | null>(null);
 
-  const leaves = buildLeaves(single);
-  const maxFlip = single ? leaves.length - 1 : leaves.length;
+  const leaves = buildLeaves(false);
+  const maxFlip = leaves.length;
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 760px)');
-    const update = () => setSingle(mq.matches);
+    const update = () => setCompact(mq.matches);
     update();
     mq.addEventListener('change', update);
     return () => mq.removeEventListener('change', update);
@@ -403,7 +407,22 @@ export default function MenuBook({ pdfHref }: { pdfHref: string }) {
     flippedRef.current = 0;
     setTurning({});
     autoOpened.current = false;
-  }, [single]);
+  }, []);
+
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    const calc = () => {
+      if (!compact) { setScale(1); return; }
+      const cs = getComputedStyle(el);
+      const avail = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      setScale(Math.min(1, avail / (COMPACT_PW * 2)));
+    };
+    calc();
+    const ro = new ResizeObserver(calc);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [compact]);
 
   useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
 
@@ -458,13 +477,13 @@ export default function MenuBook({ pdfHref }: { pdfHref: string }) {
     io.observe(el);
     return () => io.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [single]);
+  }, [compact]);
 
-  const pageToFlip = (k: number) => (single ? k + 1 : Math.floor(k / 2) + 1);
-  const currentPageIndex = single ? flipped - 1 : (flipped - 1) * 2;
+  const pageToFlip = (k: number) => Math.floor(k / 2) + 1;
+  const currentPageIndex = (flipped - 1) * 2;
   const activeChip = CHIPS.reduce((acc, chip, idx) => {
     const p = chipPage(chip.match);
-    return p >= 0 && p <= Math.max(0, single ? currentPageIndex : currentPageIndex + 1) && flipped > 0 ? idx : acc;
+    return p >= 0 && p <= Math.max(0, currentPageIndex + 1) && flipped > 0 ? idx : acc;
   }, -1);
 
   const onKey = (e: React.KeyboardEvent) => {
@@ -472,21 +491,23 @@ export default function MenuBook({ pdfHref }: { pdfHref: string }) {
     if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
   };
 
-  const shift = single ? 0 : flipped === 0 ? -25 : flipped === maxFlip ? 25 : 0;
+  const shift = flipped === 0 ? -25 : flipped === maxFlip ? 25 : 0;
 
   const counter = (() => {
     if (flipped === 0) return 'Umschlag';
-    if (single) return `Seite ${flipped} / ${ALL_PAGES.length}`;
     if (flipped >= maxFlip) return 'Ende';
     return `Seite ${flipped * 2 - 1}–${flipped * 2} / ${ALL_PAGES.length}`;
   })();
 
   return (
-    <div className="mb-stage" tabIndex={0} onKeyDown={onKey} aria-label="Digitale Speisekarte zum Blättern">
+    <div ref={stageRef} className="mb-stage" tabIndex={0} onKeyDown={onKey} aria-label="Digitale Speisekarte zum Blättern">
       <div className="mb-glow" aria-hidden="true" />
+      {compact ? (
+        <div className="mb-scalebox" style={{ width: COMPACT_PW * 2 * scale, height: COMPACT_PH * scale }}>
+          <div style={{ width: COMPACT_PW * 2, height: COMPACT_PH, transform: `scale(${scale})`, transformOrigin: 'top left' }}>
       <div
         ref={bookRef}
-        className={`mb-book${single ? ' is-single' : ''}${flipped === 0 ? ' is-closed' : ''}`}
+        className={`mb-book${compact ? ' is-compact' : ''}${flipped === 0 ? ' is-closed' : ''}`}
         style={{ transform: `translateX(${shift}%)` }}
         onTouchStart={(e) => { touchX.current = e.touches[0].clientX; }}
         onTouchEnd={(e) => {
@@ -496,12 +517,12 @@ export default function MenuBook({ pdfHref }: { pdfHref: string }) {
           if (Math.abs(dx) > 45) (dx < 0 ? next : prev)();
         }}
       >
-        {!single && <div className="mb-spine" aria-hidden="true" />}
+        {<div className="mb-spine" aria-hidden="true" />}
         {leaves.map((leaf, i) => {
           const isFlipped = flipped > i;
           const z = turning[i] ? 200 + (leaves.length - i) : isFlipped ? i + 1 : leaves.length - i;
           const frontActive = !isFlipped && flipped === i;
-          const backActive = !single && isFlipped && flipped === i + 1;
+          const backActive = isFlipped && flipped === i + 1;
           return (
             <div
               key={i}
@@ -515,6 +536,41 @@ export default function MenuBook({ pdfHref }: { pdfHref: string }) {
           );
         })}
       </div>
+          </div>
+        </div>
+      ) : (
+      <div
+        ref={bookRef}
+        className={`mb-book${compact ? ' is-compact' : ''}${flipped === 0 ? ' is-closed' : ''}`}
+        style={{ transform: `translateX(${shift}%)` }}
+        onTouchStart={(e) => { touchX.current = e.touches[0].clientX; }}
+        onTouchEnd={(e) => {
+          if (touchX.current === null) return;
+          const dx = e.changedTouches[0].clientX - touchX.current;
+          touchX.current = null;
+          if (Math.abs(dx) > 45) (dx < 0 ? next : prev)();
+        }}
+      >
+        {<div className="mb-spine" aria-hidden="true" />}
+        {leaves.map((leaf, i) => {
+          const isFlipped = flipped > i;
+          const z = turning[i] ? 200 + (leaves.length - i) : isFlipped ? i + 1 : leaves.length - i;
+          const frontActive = !isFlipped && flipped === i;
+          const backActive = isFlipped && flipped === i + 1;
+          return (
+            <div
+              key={i}
+              className={`mb-leaf${isFlipped ? ' is-flipped' : ''}${turning[i] ? ' is-turning' : ''}`}
+              style={{ zIndex: z }}
+              onClick={() => (isFlipped ? prev() : next())}
+            >
+              <FaceView face={leaf.front} side="front" active={frontActive} />
+              <FaceView face={leaf.back} side="back" active={backActive} />
+            </div>
+          );
+        })}
+      </div>
+      )}
 
       <div className="mb-chips" role="tablist" aria-label="Kategorien">
         {CHIPS.map((chip, idx) => (

@@ -608,3 +608,36 @@ h2 { font-size: clamp(47px, 6vw, 86px); line-height: .88; margin: 0; letter-spac
   .chef-copy .large-copy { font-size: 23px; }
   .stats-row { gap: 18px 26px; }
 }
+
+/* ===== Mobile : le livre s'affiche comme sur PC, réduit pour tenir dans l'écran (v44) ===== */
+@media (max-width: 760px) {
+  .mb-stage { margin-left: -6vw; margin-right: -6vw; padding: 36px 2vw 26px; border-radius: 0; }
+}
+.mb-scalebox { position: relative; margin: 0 auto; }
+.mb-book.is-compact { --pw: 290px; --ph: 600px; margin-bottom: 0; }
+.mb-book.is-compact .mb-face { padding: 30px 24px 36px; }
+.mb-book.is-compact .menubook-item-name { font-size: 16px; white-space: normal; }
+.mb-book.is-compact .menubook-item-head { flex-wrap: nowrap; gap: 6px; }
+.mb-book.is-compact .menubook-item-name { flex: 0 1 auto; }
+.mb-book.is-compact .menubook-item-dots { min-width: 8px; }
+.mb-book.is-compact .menubook-item-price { font-size: 13px; }
+.mb-book.is-compact .menubook-item-desc { font-size: 13px; line-height: 1.5; max-width: 100%; }
+.mb-book.is-compact .menubook-intro p { font-size: 14.5px; line-height: 1.7; max-width: 100%; }
+.mb-book.is-compact .menubook-intro-title { font-size: 34px; }
+.mb-book.is-compact .menubook-page-kicker { font-size: 11px; }
+.mb-book.is-compact .menubook-page-title { font-size: 26px; margin-bottom: 18px; }
+.mb-book.is-compact .menubook-items ul { gap: 18px; }
+.mb-book.is-compact .menubook-items ul.menubook-legend-list { gap: 6px; }
+.mb-book.is-compact .menubook-legend-list li { gap: 9px; }
+.mb-book.is-compact .menubook-legend-list span { font-size: 11.5px; line-height: 1.3; }
+.mb-book.is-compact .mb-cover-title { font-size: 40px; }
+.mb-book.is-compact .mb-cover-brand { font-size: 12px; }
+.mb-book.is-compact .mb-cover-sub { font-size: 11px; }
+.mb-book.is-compact .mb-cover-hint { font-size: 10px; }
+
+/* ===== Mobile : logo plus grand (v44) ===== */
+@media (max-width: 850px) {
+  .brand-logo-image { height: 74px; }
+  .hero-logo-big { margin: 22px 0 26px; }
+  .hero-logo-big img { height: auto; width: min(88vw, 380px); max-width: 100%; }
+}
