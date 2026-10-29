@@ -33,6 +33,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .nav-download:hover { opacity: .8; background: rgba(255,255,255,.12); }
 .menu-toggle { display: none; border: 0; background: none; color: inherit; }
 .hero-video-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.hero-tiles-bg { background: #0f2f3a url('/images/banner-tiles.jpg') center / cover no-repeat; filter: brightness(.62) saturate(1.1); }
 .hero-video-bg img { width: 100%; height: 100%; object-fit: cover; opacity: 1; filter: brightness(.8) saturate(1.05); animation: slowZoom 20s ease-in-out infinite alternate; }
 @keyframes slowZoom { from { transform: scale(1); } to { transform: scale(1.12); } }
 .hero-section { min-height: 780px; padding: 170px 10vw 90px; position: relative; display: flex; align-items: center; color: #eaf6fb; background: #163c4c; overflow: hidden; }

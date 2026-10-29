@@ -80,7 +80,7 @@ function App() {
 
       <main id="top">
         <section className="hero-section">
-          <div className="hero-video-bg"><img src="/images/banner-boutique.jpg" alt="" loading="eager" /></div>
+          <div className="hero-video-bg hero-tiles-bg" aria-hidden="true" />
           <div className="hero-copy">
             <p className="eyebrow"><span className="eyebrow-line" /> L'autentica pizza napoletana</p>
             <div className="hero-logo-big"><img src={logoSrc} alt="Little Napoli" /></div>
